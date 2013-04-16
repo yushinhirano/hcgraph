@@ -74,30 +74,37 @@ Apache固有の機能などは特に使っていない。
 *  /etc/httpd/conf/httpd.confを編集する。
 
 1. disabledをコメントアウト、public_htmlをコメントイン。
-	<IfModule mod_userdir.c>
-	    #
-	    # UserDir is disabled by default since it can confirm the presence
-	    # of a username on the system (depending on home directory
-	    # permissions).
-	    #
-	#    UserDir Sites
-	
-	    #
-	    # To enable requests to /~user/ to serve the user's public_html
-	    # directory, remove the "UserDir disabled" line above, and uncomment
-	    # the following line instead:
-	    #
-	    UserDir public_html
-	
-	</IfModule>
+
+```
+<IfModule mod_userdir.c>
+    #
+    # UserDir is disabled by default since it can confirm the presence
+    # of a username on the system (depending on home directory
+    # permissions).
+    #
+#    UserDir Sites
+
+    #
+    # To enable requests to /~user/ to serve the user's public_html
+    # directory, remove the "UserDir disabled" line above, and uncomment
+    # the following line instead:
+    #
+    UserDir public_html
+
+</IfModule>
+```
 
 2. 以下の部分をコメントイン。
-	AddHandler cgi-script .cgi
+```
+AddHandler cgi-script .cgi
+```
 
 3. 適当な場所に追加。
-	<Directory /home/*/public_html/*/cgi>
-	    Options ExecCGI
-	</Directory>
+```
+<Directory /home/*/public_html/*/cgi>
+    Options ExecCGI
+</Directory>
+```
 
 * httpdをrestartかreloadして、以下のURLでアクセスしてみる。
   http://{ドメイン名}/~{ユーザ名}/hcgraph/cgi/index.cgi
