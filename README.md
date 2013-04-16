@@ -2,6 +2,7 @@ High Chart Graph
 ===========================
 
 * HCGraph α版。
+* サンプル: http://49.212.156.163/~yushin/hcgraph_sample/cgi/index.cgi
 
 # 概要
 
