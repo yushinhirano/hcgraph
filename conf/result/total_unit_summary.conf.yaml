@@ -1,0 +1,6 @@
+# 1ページ表示定義
+title: 全部署合計(%)     # ページ内のh1タグ内文字列およびlink文字列
+description: 部署合計サマリーグラフ。
+load_type: file_path
+graph_configs:            # graph_number数分だけ配列にしてコンフィグパスを指定。ここからはIDでハッシュ作らずともよい。
+  - ../conf/result/total_unit_summary/total_result.conf.yaml

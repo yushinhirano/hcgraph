@@ -1,0 +1,20 @@
+# グラフ定義テンプレート。${name}を、実際のファイル名に置換、また${path}をファイルパス全体に置換してコンフィグを完成させる。
+# サポートしているグラフタイプ：basic_line basic_column stacked_column stacked_percentage_column pie_chart
+type: stacked_column
+title: ${name}   # グラフ自身のタイトル。
+description: ${name}ステータスグラフ。
+config_type: template
+graph_id: 0           # ページ内でのID。0から連番でOK。
+xAxis: 
+  type: datetime
+  datefmt: %Y-%m-%d_%H:%M:%S
+  title: start_date
+yAxis:
+  title: execute_time(sec)
+data_config:
+  use_header: true
+  ycolumn_range: true
+  datas:
+    - filepath: ${path}
+      xdata_colnum: 1
+      ydata_colnum: 3

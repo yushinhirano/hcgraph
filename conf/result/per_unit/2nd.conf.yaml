@@ -1,0 +1,37 @@
+# グラフ定義
+# サポートしているグラフタイプ：basic_line basic_column stacked_column stacked_percentage_column pie_chart
+type: basic_column
+title: 2枚目のテープを貼る(部署毎のデータ)   # グラフ自身のタイトル。
+description: 2枚目のテープを貼ることが困難である理由と答えた割合。
+config_type: normal
+graph_id: 1           # ページ内でのID。0から連番でOK。
+xAxis: 
+  title: 2枚目のテープを貼る(部署毎のデータ)
+  type: string
+yAxis: 
+  title: percentage
+  max: 100
+  min: 0
+data_config:
+  use_header: true
+  datas:
+    - name: 簡単（％）
+      filepath: ../data/result/per_busho_2nd_tape.dmp
+      xdata_colnum: 1
+      ydata_colnum: 2
+    - name: やや簡単（％）
+      filepath: ../data/result/per_busho_2nd_tape.dmp
+      xdata_colnum: 1
+      ydata_colnum: 3
+    - name: 普通（％）
+      filepath: ../data/result/per_busho_2nd_tape.dmp
+      xdata_colnum: 1
+      ydata_colnum: 4
+    - name: やや困難（％）
+      filepath: ../data/result/per_busho_2nd_tape.dmp
+      xdata_colnum: 1
+      ydata_colnum: 5
+    - name: 困難（％）
+      filepath: ../data/result/per_busho_2nd_tape.dmp
+      xdata_colnum: 1
+      ydata_colnum: 6

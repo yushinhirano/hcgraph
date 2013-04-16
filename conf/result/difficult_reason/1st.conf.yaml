@@ -1,0 +1,17 @@
+# グラフ定義
+# サポートしているグラフタイプ：basic_line basic_column stacked_column stacked_percentage_column pie_chart
+type: pie_chart
+title: 1枚目のテープを貼る（困難な理由割合）   # グラフ自身のタイトル。
+config_type: normal
+description: 1枚目のテープを貼ることが困難である理由と答えた割合。
+graph_id: 0           # ページ内でのID。0から連番でOK。
+xAxis: 
+  type: string        # x軸項目をシングルクォーテーションで囲むかどうか。文字列の場合はtrueにすること。
+data_config:
+  use_header: true
+  datas:
+    - name: 回答数      # この値はどこにも表れないが。
+      filepath: ../data/result/reason.dmp
+      xdata_colnum: 1
+      ydata_colnum: 2
+

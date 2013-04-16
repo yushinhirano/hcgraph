@@ -1,0 +1,10 @@
+# 1ページ表示定義
+title: 部署ごとの回答難易度(%)     # ページ内のh1タグ内文字列およびlink文字列
+description: 回答された難易度グラフ。部署毎に集計。
+graph_number: 4           # HTML内に表示するグラフ数。
+load_type: file_path
+graph_configs:            # graph_number数分だけ配列にしてコンフィグパスを指定。ここからはIDでハッシュ作らずともよい。
+  - ../conf/result/per_unit/1st.conf.yaml
+  - ../conf/result/per_unit/2nd.conf.yaml
+  - ../conf/result/per_unit/3rd.conf.yaml
+  - ../conf/result/per_unit/4th.conf.yaml

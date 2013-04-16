@@ -1,0 +1,10 @@
+# 1ページ表示定義
+title: 困難な理由の割合     # ページ内のh1タグ内文字列およびlink文字列
+description: 回答された難易度割合。
+graph_number: 4           # HTML内に表示するグラフ数。
+load_type: file_path
+graph_configs:            # graph_number数分だけ配列にしてコンフィグパスを指定。ここからはIDでハッシュ作らずともよい。
+  - ../conf/result/difficult_reason/1st.conf.yaml
+  - ../conf/result/difficult_reason/2nd.conf.yaml
+  - ../conf/result/difficult_reason/3rd.conf.yaml
+  - ../conf/result/difficult_reason/4th.conf.yaml

@@ -1,0 +1,7 @@
+# 1ページ表示定義
+title: 新固定関連     # ページ内のh1タグ内文字列およびlink文字列
+description: 新固定関連グラフ
+load_type: file_path
+graph_configs:            # graph_number数分だけ配列にしてコンフィグパスを指定。ここからはIDでハッシュ作らずともよい。
+  - ../conf/result/new_stable_relation/scene.conf.yaml
+  - ../conf/result/new_stable_relation/action.conf.yaml

@@ -1,0 +1,18 @@
+# グラフ定義
+# サポートしているグラフタイプ：basic_line basic_column stacked_column stacked_percentage_column pie_chart
+type: basic_column
+title: 新固定が困難な場面   # グラフ自身のタイトル。
+description: 新たな固定方法が困難である場面。
+config_type: normal
+graph_id: 0           # ページ内でのID。0から連番でOK。
+xAxis: 
+  type: string
+yAxis: 
+  title: 回答数
+data_config:
+  use_header: true
+  datas:
+    - name: 回答数      # この値はどこにも表れないが。
+      filepath: ../data/result/shinkotei_case.dmp
+      xdata_colnum: 1
+      ydata_colnum: 2

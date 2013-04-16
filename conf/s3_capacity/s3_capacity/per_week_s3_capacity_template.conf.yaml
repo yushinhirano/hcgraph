@@ -1,0 +1,19 @@
+# グラフ定義テンプレート。${name}を、実際のファイル名に置換、また${path}をファイルパス全体に置換してコンフィグを完成させる。
+# サポートしているグラフタイプ：basic_line basic_column stacked_column stacked_percentage_column pie_chart
+type: basic_line
+title: ${name}　S3データ容量   # グラフ自身のタイトル。
+description: ${name}の週別S3データ容量変遷グラフ。
+config_type: template
+graph_id: 0           # ページ内でのID。0から連番でOK。
+xAxis: 
+  type: datetime
+  datefmt: %Y%m%d
+  title: date
+yAxis:
+  title: data_size(byte)
+data_config:
+  use_header: true
+  datas:
+    - filepath: ${path}
+      xdata_colnum: 1
+      ydata_colnum: 2

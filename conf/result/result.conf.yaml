@@ -1,0 +1,14 @@
+# グループ定義
+title: アンケート結果     # htmlのtitletタグ。
+default_gpid: total_unit_summary    # デフォルトで表示するページ
+load_type: file_path
+page_view_gpids:                    # ループ順序確定のためのgpid配列。これは完全に設計ミス・・・いってぇ。
+  - total_unit_summary
+  - difficult_reason
+  - new_stable_relation
+  - per_unit
+page_views:                         # html_views一つ一つが、1HTMLに表示する単位。ハッシュキーはgpidと同期すること。
+  total_unit_summary:     ../conf/result/total_unit_summary.conf.yaml
+  difficult_reason:       ../conf/result/difficult_reason.conf.yaml
+  new_stable_relation:    ../conf/result/new_stable_relation.conf.yaml
+  per_unit:               ../conf/result/per_unit.conf.yaml

@@ -1,0 +1,478 @@
+◆どんなプロトタイプを作るか？
+
+・コンフィグを読んでグラフのフォーマットを決定
+
+・データ：２種類くらい作る。
+  
+  
+  
+
+・画面もそれなりに作る。
+
+  グラフ機能。
+  ・切り替えボタン
+  ・切り替えパターン：
+    縦軸
+    横軸
+    
+    ん！？横軸！？それ難しくないか！？
+    「グループ」でも定義して、
+    そのグループごとにいつからいつまでってのを読ませてやるしかないなー。
+    
+    プロトタイプではそこまでは難しいか・・・ってか、それはかなりの機能になるからな。
+    
+    
+
+
+・もちろんrubyからCGIで書くこと。
+
+・ある程度の抽象化を。
+
+  データソースをDBに置いたりするからね。
+  後はデータ格納部分だが・・・サンプルではこれは作らない。一応。
+  
+
+
+・今回使用するデータ
+  
+  
+  
+  基準日付：（最終更新日時。だが別にそう意味ではないため）
+            データソース選択時に使うもの。
+            
+            YYYYMMDD_HH24MISS
+            
+
+  開始日時
+  
+  終了日時
+  
+  実行時間
+  
+  
+  種類（作るファイル数）
+  
+  ・収集
+  
+  ・集計１
+  
+  ・集計２
+  
+  ・マージ
+  
+  ・ソート
+  
+  ・ダウンロード
+  
+  各3日分くらい。
+1	2
+
+
+
+
+◆10.9
+  次はテンプレートファイルと変換クラスを作るところから。
+  また、データダンプファイルも作る。
+  dmp/と、template/以下にそれぞれ置くこと。
+  
+  =={data}==とか適当な文字列を変換元にしよう。
+
+
+◆10/13〜
+
+HTMLビルダークラスを作って、
+
+「head部分の生成クラス」（スクリプトリンクの変化が主な仕事）
+  「chart部分のスクリプト生成クラス」
+「body部分の生成クラス」
+  「header 生成クラス」
+  「footer 生成クラス」（要らない？）
+  これらをコンポジションして作る。
+  
+レイアウト：
+  Indexには、各コンフィグを全部読み込んで、どのグループを表示するかを決める。
+  ここだけ静的ページ。後はIndexからパラメータ付きcgiへのリンクを貼る。
+  
+グループコンフィグ：
+  ・グループ名（格納ディレクトリ名）
+  ・グループタイトル
+  ・サブグループ数
+  ・サブグループ１（1つのHTMLに表示するグラフ単位）
+  ・サブグループ２・・・
+  
+  サブグループ数分、左にナビゲーションを作る。
+  
+サブグループコンフィグ
+  サブグループ名（格納ディレクトリ名兼ID）
+  サブグループタイトル
+  グラフ数
+  グラフコンフィグ１
+  グラフコンフィグ２・・・
+  
+  
+グラフコンフィグ
+  NumberId
+  グラフ種類（これによって色々と書き方・コンフィグが変わる。ここはクラス分けしよう）
+  ファクトリーはlight weightパターンか何か。どっかにインスタンスは保持しておいて、
+  グラフ種類によって実装を変えるだけ、としよう。
+  
+  また、パーツはモジュール化しておく。
+  
+  例えば、basic_line
+  
+  margine Right
+  margine Bottom
+  title
+  xAxis
+  yAxis
+  tooltip（最初は固定で、simpleとかしちゃうか？）
+  legend（同上）
+  データ系列
+  
+  
+
+まずは完成形のViewを作ってみるか。
+
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -10,
+                y: 100,
+                borderWidth: 0
+            },
+
+
+lib/html/simple_html_builder
+
+
+
+
+
+★修正点
+
+stringxは廃止。xAxisに指定させる。
+
+グラフコンフィグに追加：
+myfmt_xAxis: common              # xAxisセクションではtitleのみ指定。この場合、data_configでは2カラム指定する必要がある。（プログラム内自動判定）
+myfmt_xAxis: stable_from_file    # 
+
+★myfmt_xAxisの値を取り、data_configと一緒に渡す必要がある。
+★myfmt_xAxisの値を取り、x軸作成に渡す必要がある。
+
+ignore_header: false           # 1行目をヘッダーとみなして無視。
+
+
+xAxisには以下を認識させる。
+
+xAxis:
+  my_fmt: common               # => 必須。xAxisセクションではtitleのみ指定可能で、なくともよい。この場合、data_configでは2カラム指定する必要がある。（プログラム内自動判定）
+                               #    dataはsingle。xAxisにはfilepathをcolnumが必要。
+  my_fmt: stable_from_file     # => 必須。ファイルから、固定のX軸項目を取得する。この場合、data_configでは1カラムのみ指定。（プログラム内自動判定）
+  type: default                # 数値項目とみなす。
+  type: string                 # 各項目をシングルクォーティングする。
+  type: datetime
+  datefmt:  (datetimeの時必須)
+  title:                       # X軸ラベル。
+
+my_fmt_data_configs: double
+my_fmt_data_configs: single
+
+===   for single！ ====
+data_configs:
+  - my_fmt: common           # nameが必要。
+    my_fmt: use_header       # header項目をnameとして使用する。
+
+colnumを、明示的にydata_colnumにする。
+ここは共通化と解りやすさのため。
+
+===  for double！ ===
+data_configs:
+  - my_fmt: common           # nameが必要。
+    my_fmt: use_header       # header項目をnameとして使用する。
+          - name: 前年比節電率
+            filepath: ../data/sample/sample.dmp
+            xdata_colnum: 1
+            ydata_colnum: 2
+
+★次に既存のグラフのテスト。
+終わったらdata_fmtとかのテスト。
+
+dataはtmpdata.gitに突っ込んどいた。
+
+★データを入れて、dateを実装して、テスト行こう。
+
+
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+★TimelyGraphのバージョンアップ
+
+①．リファクタリング
+   UIの変更もしたいし、コンフィグの読み方はscriptUIの方が優れている。
+   スケーラブルで変更が容易な形にする。
+
+②．指定カラム以降を全て積み上げグラフとするグラフタイプ
+    dataの指定がトリッキーになる。
+
+③．テンプレート
+    テンプレートコンフィグを作って適用可能となるように。
+    今回作るタイプは、あるdataディレクトリの下から自動的に読んでグラフを作る奴。
+    勝手にヘッダを取ったりする。
+    template_type : recursive_dir_templateとでもしようか。
+
+
+④．グループコンフィグで、dataパスサフィックスを指定可能に。
+    いちいちデータパス指定がめんどくさいので。
+
+
+★GUIの変更。
+  
+  コンフィグの直接指定をやめて、aid(Action Id)、ggid(Graph Group ID)、gpid(Graph Page Id)で指定する。
+  
+  aid
+    home
+    admin
+    view
+  
+  くらいあればとりあえずOK。
+  
+  
+  ggid
+    graph_viewハッシュのキーと同期。
+    このハッシュの下に、グラフグループyamlを指定する。
+  
+    -- グループコンフィグ
+      何ページあるか、そのページのコンフィグパスを指定。
+      こいつでnav_barを作る。
+      
+      ★
+  
+    -- グラフページコンフィグ
+       1ページの表示設定
+       1ページ表示するグラフコンフィグのパスを複数指定。
+       ここまで指定できればページが描画可能。
+   
+      -- グラフコンフィグ
+       1グラフのコンフィグ。
+
+
+
+デフォルト画面をindex.cgiにしてみた。
+これにアクセスすると勝手にaidをhomeにして返す。
+
+http://49.212.156.163/~yushin/hcgraph/cgi/index.cgi
+
+http://49.212.156.163/~yushin/hcgraph/cgi/graph_view.cgi?aid=home
+
+http://49.212.156.163/~yushin/hcgraph/cgi/graph_view.cgi?aid=view&ggid=ata_result_kvs&gpid=kvs_update_time
+
+
+http://49.212.156.163/~yushin/scriptui/cgi/sample4.cgi?aid=main_view
+
+
+
+
+★①グラフメイン部分。
+<body>
+
+タイトルはまぁ入れてもいいかな。
+"<div id=\"my_header\"><h1>#{title}</h1></div>\n"
+
+<div id="my_contents">
+    <div id="mymain">
+        <div class="contents">
+    EOF
+    graph_number.times do |i|
+      contents << "<div id=\"container#{i}\" class=\"graph_contents\"></div><br><br><br>\n"
+    end
+    contents << "</div></div></div>\n"
+    contents
+
+divにするのは必須なので、ここは必要。
+
+
+    navigation =<<-EOF
+    <div id="my_navigation">
+        <div id="mynavi">
+    EOF
+    group_config["sub_group_number"].times do |i|
+      link_str = group_config["sub_groups"][i]["title"]
+      navigation << "<div class=\"menulist\"><a href=\"./graph_group.cgi?config=#{group_config["config_path"]}&sub_group_num=#{i}\">#{link_str}</a></div>\n"
+    end
+    navigation << "</div>\n</div>"
+
+    navigation
+
+ナビゲーションは新たに作る。
+
+</body>
+
+
+
+
+共通ナビゲーションまで作ったら、上記を下のフォーマットに上手く取り込もう。
+
+
+・コンテナスタート
+    <div class="container-fluid">
+      <div class="row-fluid">
+
+
+・Bodyページナビゲーション
+
+        <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Script Executer1</li>
+              <li class="active"><a href="sample4.cgi?aid=main_view">Sample</a></li>
+              <li><a href="#">Group 2</a></li>
+              <li><a href="#">Group 3</a></li>
+              <li><a href="#">Group 4</a></li>
+              <li class="nav-header">Script Executer2</li>
+              <li><a href="#">Group 5</a></li>
+              <li><a href="#">Group 6</a></li>
+              <li><a href="#">Group 7</a></li>
+              <li><a href="#">Group 8</a></li>
+              <li><a href="#">Group 9</a></li>
+              <li><a href="#">Group 10</a></li>
+              <li class="nav-header">Script Executer3</li>
+              <li><a href="#">Group 11</a></li>
+              <li><a href="#">Group 12</a></li>
+              <li><a href="#">Group 13</a></li>
+            </ul>
+          </div><!--/.well -->
+        </div><!--/span-->
+        
+
+・Bodyコンテンツスタート
+        <div class="span9">
+          <div class="hero-unit">
+            <h3>script group title</h3>
+            <p>
+              説明とりんく！
+              <ul>
+                <li>titleA: description A</li>
+                <li>script B</li>
+                <li>script C</li>
+              </ul>
+            </p>
+          </div>
+
+
+
+・グラフ部分繰返しで作る
+
+
+
+          <div class="well well-small">
+            <h3>script name</h3>
+            <div class="alert alert-info">
+              説明！赤字項目必須入力。
+            </div>
+
+            <form action="../cgi/sample4.cgi" method="get" class="form-horizontal">
+              <fieldset>
+              <h5>options</h5>
+                <div class="control-group error">
+                  <label class="control-label" for="input01">Text input</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge" name="input01" placeholder="Text input">
+                    <span class="help-block">へるぷ</span>
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="optionsCheckbox">Checkbox</label>
+                  <div class="controls">
+                    <label class="checkbox">
+                      <input type="checkbox" id="optionsCheckbox" value="check1">
+                      ボックス１
+                    </label>
+                    <label class="checkbox">
+                      <input type="checkbox" id="optionsCheckbox" value="check2">
+                      ボックス２
+                    </label>
+                  </div>
+                </div>
+                <h5>args</h5>
+                <div class="control-group">
+                  <label class="control-label" for="select01">Select list</label>
+                  <div class="controls">
+                    <select id="select01">
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                    </select>
+                  </div>
+                </div>
+              </fieldset>
+              <button type="submit" class="btn btn-inverse"><i class="icon-play"></i> えぐぜきゅーと！</button>
+            </form>
+          </div>
+
+
+・コンテナエンド
+
+      <hr>
+      <footer>
+        <p>&copy; Company 2013</p>
+      </footer>
+      </div><!--/row-->
+    </div><!--/.fluid-container-->
+
+
+
+・ほぼ出来たので、コンフィグ作り⇒一旦ata01に持っていく⇒今のデータでテスト。（同時に、現状のATAデータをdataに突っ込んでおく）
+  
+・積み上げ用コンフィグの実装
+
+graph_number抜いてもいい？
+data_configにignore_headerとuse_headerを入れる。
+これ別々ね。
+use_header trueならignore_headerは関係ない。
+use_header falseならignore_headerが働く。
+
+dataconfigからもmy_fmtを抜く。
+かつ、use_headerをデフォルトでどうぞ。ignore_headerは滅多に使わないからデフォルトには不要。
+
+
+＝＝＝コンフィグリファクタリング
+
+★load_type: file_pathをgroupコンフィグ/pvconfigに。
+load_type: file_path
+
+★graphconfigにはconfig_type: normalを追加して置く。
+★data_configsをdata_configに。
+★data_configからmy_fmtを抜く。
+★data_configにuse_headerを入れる。
+★x軸からmy_fmtを抜く。要らんわ。
+★y軸にも要らない。
+★ignore_headerを抜く。
+
+
+config_type: normal
+  use_header: true
+
+
+とりあえず、sample側以外は上がり！もういいや・・・今日は。
+
+
+さぁテンプレート行こうか！
+
+load_typeに、template_dirname
+             template_filename
+             
+             を、使えるようにする。
+             
+             template_dirnameはGroupConfig側、
+             template_filenameはPageConfig側でそれぞれ有効にする。
+             
+             また、どちらもtemplate_config_pathと、source_dir_pathを付ける。
+             
+グラフコンフィグでは、
+config_type: template
+とする。
+
+${name}はファイル名に、
+${path}はファイルパスに置換する。

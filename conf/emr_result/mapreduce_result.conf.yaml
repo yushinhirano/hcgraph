@@ -1,0 +1,5 @@
+# グループ定義
+title: EMR実行結果(MapReduceジョブ解析)     # htmlのtitletタグ。
+load_type: template_dirname            # gpidをディレクトリ名から取得するテンプレートコンフィグ。
+template_config_path: ../conf/emr_result/mapreduce_summary_template.conf.yaml      # テンプレートPVコンフィグ
+source_dir_path: ../data/emr_records/per_jobs    # テンプレートのgpid抽出に使用するディレクトリパス

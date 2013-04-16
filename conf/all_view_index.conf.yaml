@@ -1,0 +1,20 @@
+# 画面表示定義
+title: HC Graph UI
+action_cgi: ../cgi/graph_view.cgi
+default_aid: home
+nav_view:
+  - name: Home                           # ナビゲーションバーに表示するリンク名
+    aid: home                            # 実行するAid。
+  - name: Admin
+    aid: admin
+graph_view_aid: view                     # グラフ表示メインに指定するAid。あれ？使ってたっけ
+view_group_ggids:                        # ループ順確定のためにかっこ悪いことをする。ここにggidを順番に入れてください。
+  - mapreduce_result
+  - jobflow_result
+  - s3_capacity
+  - result
+view_groups:                              # このハッシュのキーには、ggidを指定すること。
+  mapreduce_result:     ../conf/emr_result/mapreduce_result.conf.yaml
+  jobflow_result:       ../conf/emr_result/jobflow_result.conf.yaml
+  s3_capacity:          ../conf/s3_capacity/s3_capacity.conf.yaml
+  result:               ../conf/result/result.conf.yaml

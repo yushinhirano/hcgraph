@@ -1,0 +1,6 @@
+# 1ページ表示定義
+title: ${name}     # ページ内のh1タグ内文字列およびlink文字列
+description: ${name}ジョブについてのMapReduce各種ステータスグラフ。
+load_type: template_filename         # テンプレート使用。
+template_config_path: ../conf/emr_result/mapreduce_summary/mapreduce_summary_template.conf.yaml  # テンプレートファイル
+source_dir_path: ${path}     # テンプレート内のgraph名に使用するファイル一覧元ディレクトリ

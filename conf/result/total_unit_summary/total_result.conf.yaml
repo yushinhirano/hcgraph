@@ -1,0 +1,34 @@
+# グラフ定義
+# サポートしているグラフタイプ：basic_line basic_column stacked_column stacked_percentage_column pie_chart
+type: stacked_percentage_column
+title: 全部署合計アンケート結果(%表示)     # グラフ自身のタイトル。
+description: 全部署合計のグラフ。後はよくわかんないデータ。
+config_type: normal
+graph_id: 0           # ページ内でのID。0から連番でOK。
+xAxis: 
+  type: string
+yAxis:
+  title: percentage
+data_config:
+  use_header: true
+  datas:
+    - name: 困難
+      filepath: ../data/result/all_result.dmp
+      xdata_colnum: 1
+      ydata_colnum: 6
+    - name: やや困難
+      filepath: ../data/result/all_result.dmp
+      xdata_colnum: 1
+      ydata_colnum: 5
+    - name: 普通
+      filepath: ../data/result/all_result.dmp
+      xdata_colnum: 1
+      ydata_colnum: 4
+    - name: やや簡単
+      filepath: ../data/result/all_result.dmp
+      xdata_colnum: 1
+      ydata_colnum: 3
+    - name: 簡単
+      filepath: ../data/result/all_result.dmp
+      xdata_colnum: 1
+      ydata_colnum: 2
