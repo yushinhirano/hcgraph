@@ -257,7 +257,19 @@ EOF
       <div class="well sidebar-nav">
         <h1>HC Graph UI Home</h1>
         <p>High Chartグラフを表示する。</p>
-        <p>画面作るのは苦手なんだっつーの！</p>
+        <p>
+         HCGraph α版。<br>
+         Hight Chartを使ったグラフを簡単に見るためのWebUIツール。<br>
+<br>
+High Chart<br>
+* http://www.highcharts.com/<br>
+<br>
+ページはTwitter Bootstrapを利用して作成しています。<br>
+* http://twitter.github.io/bootstrap/<br>
+<br>
+簡単にファイル置いて簡単にグラフ化したいがために作ったもの。<br>
+そしてどうせ見るなら味のないグラフよりリッチなグラフで見たいから、HighChartを利用しています。<br>
+        </p>
       </div>
 
       <hr>
